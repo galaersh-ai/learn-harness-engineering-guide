@@ -1,0 +1,2089 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Перевод курса Learn Harness Engineering на русский">
+      
+      
+      
+        <link rel="canonical" href="https://galaersh-ai.github.io/learn-harness-engineering-guide/lectures/15-from-single-loops-to-graph-engineering/">
+      
+      
+        <link rel="prev" href="../lecture-14/">
+      
+      
+        <link rel="next" href="../../projects/01-prompt-only-vs-rules-first/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>14. От одиночных циклов к граф-инжинирингу - Learn Harness Engineering — Перевод</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#15-" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../.." title="Learn Harness Engineering — Перевод" class="md-header__button md-logo" aria-label="Learn Harness Engineering — Перевод" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Learn Harness Engineering — Перевод
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              14. От одиночных циклов к граф-инжинирингу
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Тёмная тема"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Тёмная тема" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Светлая тема"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Светлая тема" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/galaersh-ai/learn-harness-engineering-guide" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Главная
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../01-why-capable-agents-still-fail/" class="md-tabs__link">
+          
+  
+  
+  Лекции
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../projects/01-prompt-only-vs-rules-first/" class="md-tabs__link">
+          
+  
+  
+  Проекты
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../library/" class="md-tabs__link">
+          
+  
+  
+  Библиотека
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../skills/" class="md-tabs__link">
+          
+  
+  
+  Навыки
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../frontier/" class="md-tabs__link">
+          
+  
+  
+  Разборы дизайна
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Learn Harness Engineering — Перевод" class="md-nav__button md-logo" aria-label="Learn Harness Engineering — Перевод" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Learn Harness Engineering — Перевод
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/galaersh-ai/learn-harness-engineering-guide" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Лекции
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Лекции
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-why-capable-agents-still-fail/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Почему сильные агенты всё равно терпят неудачу
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-what-a-harness-actually-is/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Что такое Harness на самом деле
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-why-repository-system-of-record/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Репозиторий как источник истины
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-why-one-giant-instruction-file-fails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Почему один файл инструкций не работает
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-why-long-running-tasks-lose-continuity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Почему длинные задачи теряют непрерывность
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-why-initialization-needs-own-phase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Почему инициализация требует отдельной фазы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-why-agents-overreach-under-finish/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Почему агенты берутся слишком за многое
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture-09/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Списки функций как примитивы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Почему агенты объявляют победу рано
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture-11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. E2E тестирование меняет результаты
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture-12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11. Обсервабильность внутри харнеса
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12. Каждая сессия должна оставлять чистое состояние
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture-14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13. От ручного промптинга к автономным циклам
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. От одиночных циклов к граф-инжинирингу
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14. От одиночных циклов к граф-инжинирингу
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Введение
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Основная идея
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевые концепции
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Примеры
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Примеры">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Типичный граф разработки
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Три структурных сбоя одиночного цикла
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Построение первого графа с нуля
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Выводы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Упражнения
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Проекты
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Проекты
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/01-prompt-only-vs-rules-first/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Только промпт vs правила
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/02-agent-readable-workspace/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Рабочее пространство для агента
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/03-multi-session-continuity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Непрерывность между сессиями
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/04-runtime-feedback-scope-control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Обратная связь и контроль scope
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/05-self-verification-role-separation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Самопроверка и разделение ролей
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/06-complete-harness-capstone/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Полный харнес (капстоун)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/07-first-automated-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Первый автоматический цикл
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/08-draw-workflow-as-graph/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Нарисуй свой workflow как граф
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Библиотека
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Библиотека
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../library/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Обзор
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../library/templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Шаблоны
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../library/reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Справочные материалы
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../library/advanced-pack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Продвинутый пакет
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Навыки
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Навыки
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Обзор
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Разборы дизайна
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Разборы дизайна
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Обзор
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontier/pi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontier/claude-code/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Code
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontier/codex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../frontier/deepseek/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DeepSeek
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="15-">Лекция 15: От одиночных циклов к граф-инжинирингу</h1>
+<h2 id="_1">Введение</h2>
+<p>Через шесть недель после того, как Loop Engineering вышел в мейнстрим, 18 июля 2026 года Питер Стайнбергер — автор OpenClaw, который в прошлой лекции говорил «перестаньте писать промпты для coding-агентов» — опубликовал твит:</p>
+<blockquote>
+<p>«Мы всё ещё говорим о циклах, или уже перешли к графам?»</p>
+</blockquote>
+<p>Один твит — около 570 тысяч просмотров за день, к концу месяца — примерно 3 миллиона. Через несколько часов ML-инженер Хамел Хусейн опубликовал статью под названием <em>Loop Engineering Is Dead. Enter Graph Engineering</em> — весь текст которой был одной GIF-картинкой «Stop it» — и набрал ещё около 680 тысяч просмотров.</p>
+<p>Ещё интереснее: <strong>оба они шутили.</strong> Один высмеивал индустрию, которая каждые шесть недель придумывает новый термин, другой подыгрывал мему. Но шутка прожила примерно один уикенд — курсы, роадмапы и технологические стеки заполонили таймлайн ещё до его конца, а за ними потянулся и ворох выдуманных цифр: «+18% точности, −85% стоимости» — это фейк, так же как и «Microsoft, Stanford и Anthropic одновременно обнаружили графовую инженерию». Факт-чекинг подтверждает единственного настоящего «первопроходца» — Джоша Симмонса: его <em>We Are Entering the Graph Engineering Phase</em> датирован 4 июля, на две полные недели раньше этой шутки. <strong>Шутка сделала идею модной. Но она не создала идею.</strong></p>
+<p>Задача этой лекции — не подлить масла в огонь хайпа, а разобрать термин по деталям: <strong>почему после одиночного цикла неизбежно вырастает граф? Чем граф на самом деле отличается от workflow? Когда он действительно нужен, а когда — нет?</strong></p>
+<h2 id="_2">Основная идея</h2>
+<p>Граф — это то, во что автоматически превращается цикл, когда задача становится достаточно сложной. В конце июля инженер Рохит (@rohit4verse) организовал историю нейминга AI-инженерии в чёткую четырёхуровневую структуру — это лучшая система координат для понимания Graph Engineering:</p>
+<table>
+<thead>
+<tr>
+<th>Этап</th>
+<th>Что формирует</th>
+<th>На какой вопрос отвечает</th>
+<th>Ключевой продукт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Prompt Engineering</strong></td>
+<td>Инструкции</td>
+<td>Как сказать модели, что делать?</td>
+<td>instructions, examples, constraints, roles, output formats</td>
+</tr>
+<tr>
+<td><strong>Context Engineering</strong></td>
+<td>Информация</td>
+<td>Что модель должна знать перед принятием решения?</td>
+<td>documents, history, memory, tool definitions, environment state</td>
+</tr>
+<tr>
+<td><strong>Loop Engineering</strong></td>
+<td>Среда выполнения</td>
+<td>Как заставить модель циклически повторять, пока цель не достигнута?</td>
+<td>observe, reason, act, inspect, update, условие остановки</td>
+</tr>
+<tr>
+<td><strong>Graph Engineering</strong></td>
+<td>Система</td>
+<td>Как сотрудничают несколько агентов, циклов, инструментов и оценщиков?</td>
+<td>узлы, рёбра, общее состояние, правила маршрутизации</td>
+</tr>
+</tbody>
+</table>
+<p>Обратите внимание, как читается эта линия: <strong>каждый уровень не заменяет предыдущий, а ложится поверх него.</strong></p>
+<ul>
+<li>Обнаружив context engineering, вы не перестали заниматься prompt engineering — на каждой итерации по-прежнему нужен промпт.</li>
+<li>Построив loop, вы не отказались от context — каждый раунд loop заново собирает контекст.</li>
+<li>В графе не исчезли ни prompt, ни context, ни loop: <strong>каждый узел несёт свой промпт, свой контекст, свои инструменты, свою память и свой маленький цикл.</strong> Граф решает, как узлы соединяются друг с другом.</li>
+</ul>
+<p>Рохит завершает свою мысль так:</p>
+<blockquote>
+<p>Как только агенту требуются специализация, параллелизм, общее состояние, верификация и восстановление — это больше не loop. Это граф.</p>
+</blockquote>
+<p><strong>Стоп, а где же harness?</strong> Среди этих четырёх имён нет Harness Engineering, хотя этот курс как раз про harness. Этот курс решил ещё во второй лекции: harness — это фундамент, и loop, и graph строятся на нём.</p>
+<p>Граф сводится к четырём простейшим элементам:</p>
+<ul>
+<li><strong>Узел (Node)</strong> — рабочая единица, несущая ответственность: фрагмент детерминированного кода, один вызов модели, инструмент или полноценный агент со своим циклом.</li>
+<li><strong>Ребро (Edge)</strong> — способ передачи работы между узлами: параллельность, условие, сбой/повтор, откат.</li>
+<li><strong>Общее состояние (State)</strong> — пакет данных, передаваемый между узлами; узлы не перекликаются напрямую, а читают и пишут одно и то же состояние.</li>
+<li><strong>Правила маршрутизации (Routing)</strong> — решают, куда идти дальше: «тесты прошли — передаём; упали — возвращаемся к реализации; информации недостаточно — к исследованию».</li>
+</ul>
+<p>Глубинное различие loop и graph формулируется так: <strong>loop прячет проблему внутри цикла, graph выкладывает проблему на бумагу.</strong> Loop — это отложенное решение («один агент возьмёт на себя всё, а если не справится — разберёмся в архитектуре потом»), цена которого — невидимость режимов сбоя. Graph — это решение заранее: вы объявляете всю структуру (кто за что отвечает, куда возвращаться при сбое), и взамен получаете читаемость, аудируемость и локальный ремонт.</p>
+<h2 id="_3">Ключевые концепции</h2>
+<ul>
+<li>
+<p><strong>Graph Engineering</strong>: инженерная практика организации нескольких агентов, циклов, инструментов и оценщиков в явный граф (узлы + рёбра + общее состояние + правила маршрутизации). Делает соединение множества рабочих единиц, общее состояние и выбор пути проектируемыми, наблюдаемыми и локально ремонтируемыми.</p>
+</li>
+<li>
+<p><strong>Четырёхуровневое наслоение</strong>: prompt → context → loop → graph. Каждый уровень управляет своим (инструкции, информация, среда выполнения, система), следующий уровень не заменяет предыдущий, а вкладывает его в свои узлы.</p>
+</li>
+<li>
+<p><strong>Четыре элемента графа</strong>: узел (рабочая единица), ребро (способ передачи), общее состояние (общий рабочий стол), правила маршрутизации (куда идти дальше).</p>
+</li>
+<li>
+<p><strong>Три структурных сбоя одиночного цикла</strong>: Гудхарт (цифры растут, а бизнес портится), слепота вверх (цикл никогда не спрашивает «а правильная ли это цель»), конфликт (независимые циклы подрывают друг друга). Граф превращает эти три класса проблем в явный дизайн отношений.</p>
+</li>
+<li>
+<p><strong>Graph ≠ Workflow</strong>: у workflow узлы — детерминированные функции, рёбра — зашитый код; у графа узлы могут быть полноценными агентами, рёбра — динамической маршрутизацией. Граф — обобщение workflow, а не его замена.</p>
+</li>
+<li>
+<p><strong>Anchors (якоря)</strong>: механизм, привязывающий сеть циклов к реальному миру (реальные бизнес-результаты, ground truth, ручные проверки). Самый пропускаемый и самый необходимый шаг в дизайне графа.</p>
+</li>
+<li>
+<p><strong>Orchestration Tax (налог за оркестрацию)</strong>: запустить агента дёшево, закрыть loop — дорого. Ваше внимание — единственный последовательный ресурс, добавление узлов его не оптимизирует.</p>
+</li>
+</ul>
+<h2 id="_4">Примеры</h2>
+<h3 id="_5">Типичный граф разработки</h3>
+<p>Соберём четыре элемента вместе — и типичный граф разработки выглядит так:</p>
+<div class="highlight"><pre><span></span><code>flowchart TD
+    S[&quot;Shared State&lt;br/&gt;Requirements / notes / code / results&quot;] --- R[&quot;Research node&lt;br/&gt;Agent: find the problem&quot;]
+    R --&gt;|&quot;propose solution&quot;| I[&quot;Implement node&lt;br/&gt;Agent: write changes + tests&quot;]
+    I --&gt;|&quot;emit code&quot;| V[&quot;Verify node&lt;br/&gt;Agent: independent review + run tests&quot;]
+    V --&gt;|&quot;failed&quot;| I
+    V --&gt;|&quot;passed&quot;| M[&quot;Merge node&lt;br/&gt;Code: commit + update state&quot;]
+    M --&gt;|&quot;update state&quot;| S
+    I --&gt;|&quot;missing data&quot;| R
+</code></pre></div>
+<p>Сравните с графом цикла из прошлой лекции: тогда это был один цикл — обнаружение, распределение, верификация, сохранение, снова обнаружение. А в графе этой лекции <strong>цикл всё ещё существует, но он разложен на явные узлы и рёбра.</strong> Узел верификации может напрямую вернуть провал узлу реализации, узел реализации может отступить к узлу исследования — эти «рёбра отката» в одиночном loop были неявными: агент сам помнил в контексте, что «мне нужно вернуться».</p>
+<h3 id="_6">Три структурных сбоя одиночного цикла</h3>
+<p><strong>1. Гудхарт: цифры растут, а бизнес портится.</strong> Доведите любую единственную метрику до предела — и она перестанет измерять то, что, по вашему мнению, измеряет. Классический пример: команда поддержки построила loop вокруг «доли решённых тикетов». Недельные данные ползли вверх. Через несколько месяцев churn удвоился — <strong>бот научился закрывать тикеты</strong>: переводить тему, отговаривать пользователя от уточнений, помечать нерешённые проблемы как «решённые».</p>
+<p><strong>2. Слепота вверх.</strong> Внутри loop опорное значение священно. Термостат не спрашивает, «правильная ли температура 68°F». Продажный loop не спрашивает, «разумна ли эта квота». Agent eval loop не спрашивает, «совпадает ли этот бенчмарк с реальными бизнес-результатами». <strong>Чью бы цель ни выбрали, loop бежит к ней, даже если это изначально было не то, за чем стоило гнаться.</strong></p>
+<p><strong>3. Конфликт.</strong> В реальных системах десятки loop, каждый построен независимо. Loop скорости ответа подрывает loop глубины качества, loop роста подрывает loop качества. Каждый loop здоров на своём дашборде, а вся система трясётся. Graph engineering должен ответить на вопросы, на которые одиночный loop ответить не может: какие loop питают какие loop? Какие loop владеют целями, за которыми гонятся другие? Какие loop могут наложить вето или откатить изменение? Каким метрикам разрешено двигаться, а какие должны быть заморожены?</p>
+<h3 id="_7">Построение первого графа с нуля</h3>
+<p>Maker-checker из прошлой лекции — это <strong>один</strong> агент, который сам себя циклит. Первое, что делает Graph Engineering, — разбирает монолитного агента: <strong>каждый узел становится специализированным агентом со своим приватным промптом, контекстом, инструментами, памятью и своим маленьким циклом; узлы не делят контекст, а передают друг другу работу только через общее состояние.</strong> Шесть шагов:</p>
+<p><strong>Шаг 1 — определите общее состояние.</strong> На уровне графа общим является только состояние, контекст узлов приватный. Для каждого поля объявите способ «объединения» — при параллельной записи это перезапись, добавление или суммирование:</p>
+<div class="highlight"><pre><span></span><code>state = {
+  &quot;requirements&quot;: text,            # written by the research node
+  &quot;code&quot;:         text,            # written by the implement node
+  &quot;review&quot;:       &quot;pass&quot; | &quot;fail&quot;, # written by the review node
+  &quot;attempts&quot;:     number,          # +1 per failure (parallel writes sum up)
+}
+</code></pre></div>
+<p><strong>Шаг 2 — перечислите узлы.</strong> Узел workflow — функция, узел графа — агент со своим маленьким циклом:</p>
+<div class="highlight"><pre><span></span><code># inside the implement node: a private small loop (the maker-checker loop from the previous lecture)
+node_implement(requirements):
+    loop (max 3 attempts):
+        code = model(prompt=implementation instructions, context=requirements + last error)
+        if tests_pass(code): return {&quot;code&quot;: code}
+    return {&quot;error&quot;: &quot;implementation did not pass in 3 attempts&quot;}
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Узел</th>
+<th>Тип</th>
+<th>Внутри узла (приватно)</th>
+<th>Запись в общее состояние</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>research</td>
+<td>агент</td>
+<td>поиск → чтение → обобщение → при нехватке данных повторный поиск (цикл)</td>
+<td>requirements</td>
+</tr>
+<tr>
+<td>implement</td>
+<td>агент</td>
+<td>пишет → тестирует → правит → пока не пройдёт (цикл)</td>
+<td>code</td>
+</tr>
+<tr>
+<td>verify</td>
+<td>агент</td>
+<td>независимое ревью + запуск тестов (fresh context, не наследует память реализатора)</td>
+<td>review (pass / fail)</td>
+</tr>
+<tr>
+<td>merge</td>
+<td>детерминированный код</td>
+<td>без цикла, при проходе проверки — commit</td>
+<td>конец</td>
+</tr>
+</tbody>
+</table>
+<p>Строка verify — самый лёгкий для порчи узел: <strong>в монолитном агенте «ревью» использует тот же контекст и судит сам себя; в графе verify обязан нести совершенно новый контекст</strong> — изоляция контекста здесь не побочный эффект, а дизайн.</p>
+<p><strong>Шаг 3 — соедините рёбра</strong> (детерминированная магистраль):</p>
+<div class="highlight"><pre><span></span><code>flowchart TD
+    A([Start]) --&gt; B[research]
+    B --&gt; C[implement]
+    C --&gt; D[verify]
+    D --&gt; E[merge]
+    E --&gt; F([End])
+</code></pre></div>
+<p><strong>Шаг 4 — напишите правила маршрутизации</strong> (самый важный шаг):</p>
+<table>
+<thead>
+<tr>
+<th>Текущий узел</th>
+<th>Условие</th>
+<th>Следующий узел</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>verify</td>
+<td>review == pass</td>
+<td>merge</td>
+</tr>
+<tr>
+<td>verify</td>
+<td>review == fail</td>
+<td>implement</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code>flowchart TD
+    A([Start]) --&gt; B[research]
+    B --&gt; C[implement]
+    C --&gt; D{verify}
+    D -- pass --&gt; E[merge]
+    D -- fail --&gt; C
+    E --&gt; F([End])
+</code></pre></div>
+<p><strong>Шаг 5 — повесьте checkpoint.</strong> Состояние каждого шага сохраняется на диск, и при падении можно продолжить с брейкпоинта, а не начинать заново. Перед merge можно вставить узел «остановиться и ждать одобрения человека»:</p>
+<div class="highlight"><pre><span></span><code>checkpoint = on(graph, every_step)   # save the state of every step
+graph.pause_before(&quot;merge&quot;)          # stop before merge, wait for approval
+</code></pre></div>
+<p><strong>Шаг 6 — запустите граф и дайте ему точку входа.</strong> Каждый запуск передаёт id треда, и checkpoint по нему различает экземпляры запуска:</p>
+<div class="highlight"><pre><span></span><code>run(graph, entry={&quot;requirements&quot;: &quot;fix the login page bug&quot;}, thread=&quot;session-1&quot;)
+</code></pre></div>
+<p>После запуска сверьтесь с рисунком: ваша рукописная <code>graph.md</code> — чертёж, а код в движке — исполняемая программа, в которую превратился чертёж. Они должны соответствовать один к одному — в этом и есть смысл «граф выкладывает проблему на бумагу».</p>
+<h2 id="_8">Выводы</h2>
+<ul>
+<li><strong>Graph Engineering не заменяет Loop Engineering, а строит слой поверх него.</strong> Loop — это узел графа; три вещи из прошлой лекции (цель, верификация, условие остановки) превращаются во внутреннюю структуру узла.</li>
+<li><strong>Граф превращает «отложенное решение» в «решение заранее».</strong> Loop прячет режимы сбоя внутри цикла, граф выкладывает их на бумагу — читаемо, аудируемо, локально ремонтируемо.</li>
+<li><strong>Что лежит в узле, определяет разницу между графом и workflow.</strong> Функция — это workflow, агент — это граф. И это единственное «новое вино» в «старых бутылках».</li>
+<li><strong>Проектируя граф, сначала ответьте на четыре вопроса:</strong> какие loop питают какие, кто владеет целью, кто может наложить вето/откатить, каким метрикам можно двигаться, а какие заморозить. Не можете ответить — не рисуйте.</li>
+<li><strong>Не рисуйте граф ради графа.</strong> Пять критериев: задача чисто разбивается, есть ветвления или откаты, промежуточное состояние стоит сохранить, результат можно принять, выгода от сотрудничества больше стоимости координации.</li>
+<li><strong>Ваша пропускная способность на ревью — всё ещё потолок.</strong> Граф делает параллельных агентов больше, но ваша способность судить — последовательный ресурс, налог за оркестрацию не исчезает от роста числа узлов.</li>
+<li><strong>Помните голос оппонента.</strong> Форма — не несущая стена; воспроизводимость, наблюдаемость, восстанавливаемость — да. Термин меняется каждые шесть недель, инженерные способности — нет.</li>
+</ul>
+<h2 id="_9">Упражнения</h2>
+<ol>
+<li>
+<p><strong>Нарисуйте maker-checker loop как граф.</strong> В <code>graph.md</code> явно выпишите узлы, рёбра, общее состояние и правила маршрутизации. Отметьте, какое ребро условное (верификация пройдена/упала), а какое — откат (сбой возвращается к реализации). После рисования ответьте: есть ли ребро, которое было неявным и раньше пряталось в контексте агента?</p>
+</li>
+<li>
+<p><strong>Ответьте на четыре вопроса дизайна.</strong> Найдите три работающих независимых loop (или три автоматизации в одном проекте) и ответьте: кто из них питает кого? Какой loop владеет целью, за которой гонится другой loop? Может ли какой-то loop наложить вето на результат другого? Какие метрики оптимизируются по отдельности и могут конфликтовать?</p>
+</li>
+<li>
+<p><strong>Самопроверка по Гудхарту.</strong> Проверьте метрику, которую вы недавно оптимизировали. Она выросла — а реальные результаты (бизнес-результаты, отзывы пользователей, качество кода) улучшились вместе с ней? Если выросла только цифра — в какую сторону этот loop вас обманывает?</p>
+</li>
+<li>
+<p><strong>Оценка по пяти критериям.</strong> Возьмите задачу, которую вы не решаетесь «графизировать», и оцените её по пяти критериям. Рисовать стоит, если выполнены хотя бы три. Если меньше трёх — ей нужен просто лучший workflow-скрипт.</p>
+</li>
+<li>
+<p><strong>Превратите graph.md в исполняемую программу.</strong> По шести шагам реализуйте нарисованный maker-checker граф как запускаемый граф. Не пропускайте шаги: определите состояние → перечислите узлы → соедините рёбра → напишите маршрутизацию → повесьте checkpoint → запустите. После запуска сверьте <code>graph.md</code> и код, найдите первое несоответствие и объясните, почему оно возникло.</p>
+</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "toc.integrate", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

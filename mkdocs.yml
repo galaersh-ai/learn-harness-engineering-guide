@@ -1,0 +1,77 @@
+site_name: 'Learn Harness Engineering — Перевод'
+site_description: 'Перевод курса Learn Harness Engineering на русский'
+site_url: https://galaersh-ai.github.io/learn-harness-engineering-guide/
+repo_url: https://github.com/galaersh-ai/learn-harness-engineering-guide
+
+theme:
+  name: material
+  language: ru
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Тёмная тема
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Светлая тема
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - toc.integrate
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed
+  - tables
+
+nav:
+  - Главная: index.md
+  - Лекции:
+    - '1. Почему сильные агенты всё равно терпят неудачу': lectures/01-why-capable-agents-still-fail.md
+    - '2. Что такое Harness на самом деле': lectures/02-what-a-harness-actually-is.md
+    - '3. Репозиторий как источник истины': lectures/03-why-repository-system-of-record.md
+    - '4. Почему один файл инструкций не работает': lectures/04-why-one-giant-instruction-file-fails.md
+    - '5. Почему длинные задачи теряют непрерывность': lectures/05-why-long-running-tasks-lose-continuity.md
+    - '6. Почему инициализация требует отдельной фазы': lectures/06-why-initialization-needs-own-phase.md
+    - '7. Почему агенты берутся слишком за многое': lectures/07-why-agents-overreach-under-finish.md
+    - '8. Списки функций как примитивы': lectures/lecture-09.md
+    - '9. Почему агенты объявляют победу рано': lectures/lecture-10.md
+    - '10. E2E тестирование меняет результаты': lectures/lecture-11.md
+    - '11. Обсервабильность внутри харнеса': lectures/lecture-12.md
+    - '12. Каждая сессия должна оставлять чистое состояние': lectures/lecture-13.md
+    - '13. От ручного промптинга к автономным циклам': lectures/lecture-14.md
+    - '14. От одиночных циклов к граф-инжинирингу': lectures/15-from-single-loops-to-graph-engineering.md
+  - Проекты:
+    - '1. Только промпт vs правила': projects/01-prompt-only-vs-rules-first.md
+    - '2. Рабочее пространство для агента': projects/02-agent-readable-workspace.md
+    - '3. Непрерывность между сессиями': projects/03-multi-session-continuity.md
+    - '4. Обратная связь и контроль scope': projects/04-runtime-feedback-scope-control.md
+    - '5. Самопроверка и разделение ролей': projects/05-self-verification-role-separation.md
+    - '6. Полный харнес (капстоун)': projects/06-complete-harness-capstone.md
+    - '7. Первый автоматический цикл': projects/07-first-automated-loop.md
+    - '8. Нарисуй свой workflow как граф': projects/08-draw-workflow-as-graph.md
+  - Библиотека:
+      - Обзор: library/index.md
+      - Шаблоны: library/templates.md
+      - Справочные материалы: library/reference.md
+      - Продвинутый пакет: library/advanced-pack.md
+  - Навыки:
+      - Обзор: skills/index.md
+  - Разборы дизайна:
+      - Обзор: frontier/index.md
+      - Pi: frontier/pi.md
+      - Claude Code: frontier/claude-code.md
+      - Codex: frontier/codex.md
+      - DeepSeek: frontier/deepseek.md
