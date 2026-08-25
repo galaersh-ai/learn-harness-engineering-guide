@@ -1,5 +1,7 @@
 # Learn Harness Engineering — Руководство на русском
 
+> Перевод курса [Learn Harness Engineering](https://walkinglabs.github.io/learn-harness-engineering/en/) от WalkingLabs. Оригинал на английском: https://walkinglabs.github.io/learn-harness-engineering/en/
+
 ## О курсе
 
 **Learn Harness Engineering** — курс, посвящённый инженерии AI-агентов для написания кода. Мы глубоко изучили и обобщили наиболее передовые теории и практики Harness Engineering в индустрии.
