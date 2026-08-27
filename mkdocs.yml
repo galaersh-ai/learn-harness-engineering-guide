@@ -5,6 +5,7 @@ repo_url: https://github.com/galaersh-ai/learn-harness-engineering-guide
 
 theme:
   name: material
+  custom_dir: overrides
   language: ru
   palette:
     - scheme: default
@@ -26,6 +27,9 @@ theme:
     - navigation.top
     - toc.integrate
     - content.code.copy
+
+extra_javascript:
+  - javascripts/metrika.js
 
 markdown_extensions:
   - admonition
