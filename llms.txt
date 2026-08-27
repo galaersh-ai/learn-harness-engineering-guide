@@ -1,0 +1,24 @@
+# Learn Harness Engineering — Перевод
+
+> Перевод курса Learn Harness Engineering на русский язык
+
+## О сайте
+
+Курс по инженерии harness для AI-агентов. Включает:
+- 15 лекций и 8 проектов
+- Архитектурные решения для AI-систем
+- Паттерны проектирования harness
+- Практические задания с полным кодом
+
+## Навигация
+
+- [Главная](https://galaersh-ai.github.io/learn-harness-engineering-guide/)
+- [Каталог всех курсов](https://galaersh-ai.github.io/ai-harness-courses-ru/)
+
+## Переводчик
+
+Ершова Галина, с использованием Hermes AI Agent.
+
+## Лицензия
+
+Оригинальный контент: WalkingLabs (MIT License). Перевод: с разрешения авторов.
